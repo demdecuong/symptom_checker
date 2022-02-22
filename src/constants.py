@@ -15,6 +15,7 @@ OTHER_SYMPTOM_INPUT = "Bạn còn triệu chứng nào không:"
 ASK_SYMPTOM_TEMPLATE = 'Bạn có bị $symptom không ? (y/n/idk):'
 
 # KNOWLEDGE BASE
-DISEASE_PATH = "../data/diseases.csv"
-SYMPTOM_PATH = "../data/symptoms.csv"
-DISEASE_SYMPTOM_PATH = "../data/diseases_has_symptoms.csv"
+DISEASE_PATH = "data/diseases.csv"
+SYMPTOM_PATH = "data/symptoms.csv"
+DISEASE_SYMPTOM_PATH = "data/diseases_has_symptoms.csv"
+SAVE_WEIGHT_PATH = "data/weight/disease_symptom_weight.csv"
