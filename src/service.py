@@ -1,9 +1,18 @@
+''' 
+Author: Nguyen Phuc Minh
+Lastest update: 22/2/2022
+'''
+
 from src.inference_engine import InferenceEngine
 from src.knowledge_base import KnowledgeBase
 
 class Service:
-    def __init__(self):
-        self.knowledge_base = KnowledgeBase()
+    ''' A wrapper class handle KnowledgeBase and InferenceEngine
+    '''
+    def __init__(self,do_filter:bool=False, topk:int=30) -> None:
+        self.knowledge_base = KnowledgeBase(
+            do_filter=do_filter,
+            topk=topk
+        )
         self.inference_engine = InferenceEngine()
     
-            

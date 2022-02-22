@@ -1,3 +1,8 @@
+''' 
+Author: Nguyen Phuc Minh
+Lastest update: 22/2/2022
+'''
+
 import pandas as pd
 import matplotlib.pylab as plt
 

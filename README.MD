@@ -1,6 +1,8 @@
 # Vietnamese Symptom Checker
 This is a rule-based approach for Vietnamese Symptom Checker
 
+<img src="asset/overview.png"/>
+
 ### Quick start
 ```
 pip install -r requirements.txt

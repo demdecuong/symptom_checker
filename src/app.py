@@ -1,3 +1,8 @@
+''' 
+Author: Nguyen Phuc Minh
+Lastest update: 22/2/2022
+'''
+
 from src.service import Service
 from src.constants import (
     GREETING,
@@ -36,7 +41,7 @@ class Application:
         # first symptom
         self.get_user_symptom(first=True)
 
-    def get_user_symptom(self,relevant_symptoms:List=[],first:Boolean=False):
+    def get_user_symptom(self,relevant_symptoms:list=[],first:bool=False) -> dict:
         '''
         Args:
             - first (bool): This is the first symptom from user 
@@ -67,17 +72,17 @@ class Application:
             symptom=symptom
         )
 
-    def update_current_response(self,symptom=None):
+    def update_current_response(self,symptom:str="") -> None:
         ''' Update self.current_response
         '''
         self.update_symptom(symptom)
         self.update_possible_disease(symptom)
         self.update_triage(symptom,possible_disease)
 
-    def greeting(self):
+    def greeting(self) -> None:
         display(GREETING) 
 
-    def get_personal_info(self):
+    def get_personal_info(self) -> None:
         name = input(NAME_INPUT)
         sex = input(SEX_INPUT)
         age = input(AGE_INPUT)
@@ -87,19 +92,19 @@ class Application:
             age=age
         )
 
-    def update_personal_info(self,name=None,sex=None,age=None):
+    def update_personal_info(self,name:str="",sex:str="",age:str="") -> None:
         ''' Update self.personal_info
         '''
-        if name != None:
+        if name != "":
             self.personal_info['name'] = name
 
-        if sex != None:
+        if sex != "":
             self.personal_info['sex'] = name
 
-        if age != None:
+        if age != "":
             self.personal_info['age'] = name
 
-    def clear_history(self):
+    def clear_history(self) -> None:
         ''' Clear all previous information
         '''
         self.current_response = {
