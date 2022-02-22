@@ -58,7 +58,7 @@ class InferenceEngine:
             symptoms = self.knowledge_base.get_symptoms_from_disease(dname) # dict
             
             for s in symptoms:
-                if s['name'] not in current_response['symptom']:
+                if s['name'] not in current_response['asked_symptom']:
                     if s['name'] not in list(relevant_symptoms.keys()):
                         relevant_symptoms[s['name']] = s['severity']
                     else:

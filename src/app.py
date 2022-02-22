@@ -18,6 +18,7 @@ class Application:
             "symptom" : [],
             "triage": "",
             "possible_disease":[],
+            "asked_symptom": []
         }
 
         self.personal_info = {
@@ -96,10 +97,12 @@ class Application:
                     response = self.asking_symptom(symptom=s,mode="verify")
                     if response == 'Y':
                         user_symptoms.append(s)
+                    self.update_asked_symptom(s)
                     
             # For 3: Get relevant symptom
             if situation == 3: 
                 user_symptoms.append(symptom)
+                self.update_asked_symptom(symptom)
                 # List of relevant symptoms
                 relevant_symptoms = self.service.get_relevant_symptoms(symptom,self.COMPARE_METHOD,self.THRESHOLD)
                 relevant_symptoms.remove(symptom) # remove itself
@@ -107,6 +110,7 @@ class Application:
                     response = self.asking_symptom(s,mode="relevant")
                     if response == 'Y':
                         user_symptoms.append(s)
+                    self.update_asked_symptom(s)
                     
 
         # user multiple-choice
@@ -114,9 +118,10 @@ class Application:
             response = self.asking_symptom(symptom=asked_symptom,mode=mode)
             if response == 'Y':
                 user_symptoms.append(asked_symptom)
-        
-        # print(user_symptoms)
+            self.update_asked_symptom(asked_symptom)
+
         self.update_current_response(symptoms=user_symptoms)
+        print(self.current_response)
 
     def update_current_response(self,symptoms:List=[]) -> None:
         ''' Update self.current_response
@@ -147,6 +152,9 @@ class Application:
             self.current_response['triage'] = GENERAL_PROCEDURE
         else:
             self.current_response['triage'] = EMERGENCE
+
+    def update_asked_symptom(self,symptom):
+        self.current_response['asked_symptom'].append(symptom)
 
     def greeting(self) -> None:
         display(GREETING) 
@@ -180,6 +188,7 @@ class Application:
             "symptom" : [],
             "triage": "",
             "possible_disease":[],
+            "asked_symptom": []
         }
 
         self.personal_info = {
