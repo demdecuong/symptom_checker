@@ -10,7 +10,7 @@ python main.py
 ```
 
 ### Data
-tbd
+Symptom-Disease weights are automated generated and saved in `data/weight/`
 
 ### Examples
 tbd

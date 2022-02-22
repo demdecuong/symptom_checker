@@ -13,9 +13,9 @@ AGE_INPUT = "Tuổi của bạn :"
 FIRST_SYMPTOM_INPUT = "Xin hãy nhập triệu chứng nào bạn cảm thấy rõ nhất:"
 OTHER_SYMPTOM_INPUT = "Bạn còn triệu chứng nào không:"
 ASK_SYMPTOM_TEMPLATE = 'Bạn có bị $symptom không ? (y/n/idk):'
+RELEVANT_SYMPTOM_TEMPLATE = 'Bạn có bị $symptom không ? (y/n/idk):'
 
-# KNOWLEDGE BASE
-DISEASE_PATH = "data/diseases.csv"
-SYMPTOM_PATH = "data/symptoms.csv"
-DISEASE_SYMPTOM_PATH = "data/diseases_has_symptoms.csv"
-SAVE_WEIGHT_PATH = "data/weight/disease_symptom_weight.csv"
+# TRIAGE
+SELF_CARE = "Bạn có thể chăm sóc tốt tại nhà"
+GENERAL_PROCEDURE = "Bạn nên đến phòng khám gần nhất"
+EMERGENCE= "Bạn cần phải đến phòng khám/bệnh viện sớm nhất có thể"

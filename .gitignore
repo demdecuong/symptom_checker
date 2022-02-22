@@ -1,3 +1,6 @@
+# Initialize weight
+data/weight/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
