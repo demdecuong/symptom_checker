@@ -1,12 +1,15 @@
 ''' 
 Author: Nguyen Phuc Minh
-Lastest update: 22/2/2022
+Lastest update: 23/2/2022
 '''
 
 from src.knowledge_base import KnowledgeBase
 from src.nlp import NLP
 from typing import List, Dict
 from itertools import islice
+from src.constants import (
+    MAXIMUM_POSSIBLE_DISEASE
+)
 
 class InferenceEngine:
     ''' A wrapper class handle KnowledgeBase and InferenceEngine
@@ -90,7 +93,7 @@ class InferenceEngine:
                     result[d] += conf
  
         # sorted 
-        N = 5
+        N = MAXIMUM_POSSIBLE_DISEASE
         top_diseases = {k: v for k, v in sorted(result.items(), reverse=True, key=lambda item: item[1])[:N]}
         result = []
         for k,v in top_diseases.items():

@@ -30,3 +30,9 @@ Symptom-Disease weights are automated generated and saved in `data/weight/`
 
 ### Examples
 tbd
+
+### Todo
+- Deeper question
+- Suggested doctor
+- Get next symptom based on more weight: 
+    + symptom-disease reputation: common/uncommon

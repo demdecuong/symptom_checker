@@ -1,6 +1,6 @@
 ''' 
 Author: Nguyen Phuc Minh
-Lastest update: 22/2/2022
+Lastest update: 23/2/2022
 '''
 
 SELF_CARE_CONFIDENCE = 5
@@ -16,3 +16,6 @@ COMPARE_METHOD = "fuzzy" # ['fuzzy','semantic','edit']
 # APPLICATION - END CONDITION
 MAXIMUM_TURN = 10
 DISEASE_CONFIDENCE = 10
+
+# Inference Engine
+MAXIMUM_POSSIBLE_DISEASE=5

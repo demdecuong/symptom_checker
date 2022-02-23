@@ -1,6 +1,6 @@
 ''' 
 Author: Nguyen Phuc Minh
-Lastest update: 22/2/2022
+Lastest update: 23/2/2022
 '''
 
 from src.inference_engine import InferenceEngine
@@ -112,7 +112,6 @@ class Application:
                         user_symptoms.append(s)
                     self.update_asked_symptom(s)
                     
-
         # user multiple-choice
         if mode == 'next':
             response = self.asking_symptom(symptom=asked_symptom,mode=mode)
@@ -234,8 +233,10 @@ class Application:
         - treatment #TODO
         - suggested doctor #TODO
         '''
-
-        display("Possible disease:")
+        display("=================================================================")
+        display("Tóm tắt:")
+        display(self.current_response["triage"])
+        display("Các bệnh có khả năng:")
         for disease in self.current_response['possible_disease']:
             display(disease['name'])
 
