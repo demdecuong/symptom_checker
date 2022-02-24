@@ -32,7 +32,8 @@ Symptom-Disease weights are automated generated and saved in `data/weight/`
 tbd
 
 ### Todo
-- Deeper question
-- Suggested doctor
-- Get next symptom based on more weight: 
+- Deeper question:
+    + If disease has same category: --> ask question y = f(possible disease, category)
+- Get next symptom based on more weight:
     + symptom-disease reputation: common/uncommon
+- Suggested doctor
