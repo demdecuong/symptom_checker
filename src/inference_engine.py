@@ -7,7 +7,7 @@ from src.knowledge_base import KnowledgeBase
 from src.nlp import NLP
 from typing import List, Dict
 from itertools import islice
-from src.constants import (
+from src.constants.config import (
     MAXIMUM_POSSIBLE_DISEASE
 )
 
@@ -93,7 +93,7 @@ class InferenceEngine:
                     result[d] += conf
  
         # sorted 
-        N = MAXIMUM_POSSIBLE_DISEASE
+        N = 5
         top_diseases = {k: v for k, v in sorted(result.items(), reverse=True, key=lambda item: item[1])[:N]}
         result = []
         for k,v in top_diseases.items():
