@@ -1,5 +1,9 @@
 # Initialize weight
 data/weight/*
+data/w2v/*
+
+analysis/phonlp
+analysis/pretrained_phonlp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

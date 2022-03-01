@@ -1,6 +1,6 @@
 ''' 
 Author: Nguyen Phuc Minh
-Lastest update: 23/2/2022
+Lastest update: 1/3/2022
 '''
 
 from src.knowledge_base import KnowledgeBase
@@ -10,6 +10,10 @@ from itertools import islice
 from src.constants.config import (
     MAXIMUM_POSSIBLE_DISEASE
 )
+from src.constants.conditions import (
+    APPLICATION_MODE
+)
+from data.symptom_category import SYMPTOM_CATEGORY
 
 class InferenceEngine:
     ''' A wrapper class handle KnowledgeBase and InferenceEngine
@@ -46,10 +50,12 @@ class InferenceEngine:
 
         return relevant_symptoms
 
-    def get_next_symptom(self,current_response:Dict) -> str:
+    def get_next_symptom(self,current_response:Dict,app_mode="horizontal") -> str:
         ''' Return next symptom should be asked based on current_response
-        # TODO
+        # TODO        
         '''
+        assert app_mode in APPLICATION_MODE
+        
         # get top possible disease
         possible_disease = current_response['possible_disease'] # dict
     
@@ -71,6 +77,13 @@ class InferenceEngine:
         N = 3
         next_symptom = dict(sorted(relevant_symptoms.items(), key=lambda x: x[1], reverse=True)[:3])
         next_symptom = list(next_symptom.keys())[0] # pick 1st one
+
+        if app_mode == 'horizontal':
+            pass
+        elif app_mode == 'vertical':
+            # get symptom category
+            pass
+            
         return next_symptom
 
     def get_possible_disease(self,symptoms:List) -> List[Dict]:
@@ -104,3 +117,12 @@ class InferenceEngine:
 
         return result
         
+    def is_included_symptom_category(self,symptom:str) -> bool:
+        ''' Check whether a symptom is supported in SYMPTOM_CATEGORY
+        '''
+        if symptom in list(SYMPTOM_CATEGORY.keys()):
+            return True
+        return False
+    
+    def get_symptom_category(self,symptom) -> dict:
+        return SYMPTOM_CATEGORY[symptom]

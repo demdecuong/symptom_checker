@@ -1,6 +1,6 @@
 ''' 
 Author: Nguyen Phuc Minh
-Lastest update: 23/2/2022
+Lastest update: 1/3/2022
 '''
 
 from src.inference_engine import InferenceEngine
@@ -8,7 +8,15 @@ from src.constants.text import *
 from src.constants.config import *
 from src.utils import display
 from string import Template
-from typing import List, Dict
+from typing import List, Dict, Tuple
+from src.constants.conditions import (
+    APPLICATION_MODE,
+    GET_SYMPTOM_MODE,
+    TYPING_SYMPTOM_MODE,
+    SYMPTOM_PERIOD,
+    SYMPTOM_SEVERITY,
+    SYMPTOM_RELATED 
+)
 
 class Application:
     def __init__(self):
@@ -18,7 +26,9 @@ class Application:
             "symptom" : [],
             "triage": "",
             "possible_disease":[],
-            "asked_symptom": []
+            "asked_symptom": [],
+            "asked category" : [],
+            "disease_period" : ""
         }
 
         self.personal_info = {
@@ -35,7 +45,9 @@ class Application:
         if COMPARE_METHOD == 'edit':
             self.THRESHOLD = EDIT_THRESHOLD
 
-    def run(self):
+    def run(self, app_mode='horizontal'):
+        assert app_mode in APPLICATION_MODE
+
         # clear history
         self.clear_history()
 
@@ -44,7 +56,7 @@ class Application:
         # self.get_personal_info()
 
         # first symptom
-        self.get_user_symptom(mode="first")
+        self.get_user_symptom(mode="first",app_mode=app_mode)
 
         num_turn = 0
         while True:
@@ -57,21 +69,24 @@ class Application:
                 self.show_result()
                 break
 
-            asked_symptom = self.service.get_next_symptom(self.current_response)
-            self.get_user_symptom(asked_symptom=asked_symptom,mode="next")
+            asked_symptom = self.service.get_next_symptom(
+                current_response=self.current_response,
+                app_mode=app_mode
+            )                
+            self.get_user_symptom(asked_symptom=asked_symptom,mode="next",app_mode=app_mode)
             num_turn += 1
 
-    def get_user_symptom(self,asked_symptom:str="",mode:str="first") -> dict:
+    def get_user_symptom(self,asked_symptom:str="",mode:str="first",app_mode="horizontal") -> dict:
         ''' Dealt with user symptoms
         Args:
             - first (bool): This is the first symptom from user 
         '''
-        
-        assert mode in ['first','other','verify','relevant','next']
+        assert app_mode in APPLICATION_MODE
+        assert mode in GET_SYMPTOM_MODE
         user_symptoms = []
 
         # user typing
-        if mode in ['first', 'other']:
+        if mode in TYPING_SYMPTOM_MODE:
             symptom = self.asking_symptom(mode=mode)
 
             '''There are 3 situations for user's symptom:
@@ -100,24 +115,52 @@ class Application:
                     self.update_asked_symptom(s)
                     
             # For 3: Get relevant symptom
-            if situation == 3: 
+            if situation == 3:
                 user_symptoms.append(symptom)
                 self.update_asked_symptom(symptom)
-                # List of relevant symptoms
-                relevant_symptoms = self.service.get_relevant_symptoms(symptom,self.COMPARE_METHOD,self.THRESHOLD)
-                relevant_symptoms.remove(symptom) # remove itself
-                for s in relevant_symptoms:
-                    response = self.asking_symptom(s,mode="relevant")
-                    if response == 'Y':
-                        user_symptoms.append(s)
-                    self.update_asked_symptom(s)
+
+                if app_mode == 'horizontal':
+                    user_symptoms.append(symptom)
+                    self.update_asked_symptom(symptom)
+                    # List of relevant symptoms
+                    relevant_symptoms = self.service.get_relevant_symptoms(symptom,self.COMPARE_METHOD,self.THRESHOLD)
+                    relevant_symptoms.remove(symptom) # remove itself
+                    for s in relevant_symptoms: 
+                        response = self.asking_symptom(s,mode="relevant")
+                        if response == 'Y':
+                            user_symptoms.append(s)
+                        self.update_asked_symptom(s)
+
+                elif app_mode == 'vertical' and self.service.is_included_symptom_category(symptom):
+                    symptom_category = self.service.get_symptom_category(symptom) # dict
                     
+                    user_chosen_symptom, asked_symptom = self.asking_vertical_question(symptom_category)
+                    
+                    for s_ in user_chosen_symptom:
+                        user_symptoms.append(s_)
+                    
+                    for s_ in asked_symptom:
+                        self.update_asked_symptom(s_)
+                        
         # user multiple-choice
         if mode == 'next':
             response = self.asking_symptom(symptom=asked_symptom,mode=mode)
             if response == 'Y':
                 user_symptoms.append(asked_symptom)
-            self.update_asked_symptom(asked_symptom)
+                self.update_asked_symptom(asked_symptom)
+
+                if app_mode == 'vertical' and self.service.is_included_symptom_category(asked_symptom):
+                    symptom_category = self.service.get_symptom_category(symptom) # dict
+                    
+                    user_chosen_symptom, asked_symptom = self.asking_vertical_question(symptom_category)
+                    
+                    for s_ in user_chosen_symptom:
+                        user_symptoms.append(s_)
+                    
+                    for s_ in asked_symptom:
+                        self.update_asked_symptom(s_)
+            else:
+                self.update_asked_symptom(asked_symptom)
 
         self.update_current_response(symptoms=user_symptoms)
         print(self.current_response)
@@ -187,7 +230,9 @@ class Application:
             "symptom" : [],
             "triage": "",
             "possible_disease":[],
-            "asked_symptom": []
+            "asked_symptom": [],
+            "asked category" : [],
+            "disease_period" : ""
         }
 
         self.personal_info = {
@@ -199,7 +244,7 @@ class Application:
     def asking_symptom(self,symptom:str="",mode:str="first") -> str:
         ''' Solve asking template
         '''
-        assert mode in ['first','other','verify','relevant','next']
+        assert mode in GET_SYMPTOM_MODE
 
         if mode == 'first':
             symptom = input(FIRST_SYMPTOM_INPUT)
@@ -256,3 +301,35 @@ class Application:
             except:
                 return 2
         return 1
+    
+    def asking_vertical_question(self,symptom_category:str) -> Tuple[List]:
+        ''' Resolve question related to symptom category
+        Return:
+            - user_chosen_symptom (list) 
+            - asked_symptom (list)
+        '''
+        user_chosen_symptom = []
+        asked_symptom = []
+
+        question_types = symptom_category.keys()
+
+        for qtype in question_types:
+            print('=======================================================================')
+            if (qtype in SYMPTOM_PERIOD) or (qtype in SYMPTOM_SEVERITY):
+                for i, choice in enumerate(list(symptom_category[qtype]["choices"].keys())):
+                    print(f"{choice} - {i}")
+                response = input(f"{symptom_category[qtype]['question']} - (0-{len(symptom_category[qtype]['choices']) - 1}):")
+                
+                # update user chosen
+                for i in range(len(symptom_category[qtype]["choices"])):
+                    if response == i:
+                        user_chosen_symptom.append(list(symptom_category[qtype]["choices"])[i])
+                        break
+            elif qtype in SYMPTOM_RELATED:
+                for symptom in symptom_category[qtype]:
+                    response = self.asking_symptom(symptom,mode="next")
+                    if response == 'Y':
+                        user_chosen_symptom.append(symptom)
+                    asked_symptom.append(symptom)
+
+        return user_chosen_symptom , asked_symptom

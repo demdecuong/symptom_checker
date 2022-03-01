@@ -15,3 +15,5 @@ Top-30 common symptoms and its 20 relevant common disease
 
 ### Top 20 relevant common disease
 <img src="asset/diseases.png" alt="Top 20 relevant common disease" style="height: 300px; width:300px;"/>
+
+### 
