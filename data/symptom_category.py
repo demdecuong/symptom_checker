@@ -11,10 +11,10 @@ SYMPTOM_CATEGORY = {
                 "< 1 day" : "Ho nhẹ",
                 "1 tuần" : "Ho thường xuyên",
                 "1 tháng": "Ho kéo dài",
-                "> 1 tháng": []
+                "> 1 tháng": "Ho mãn tính"
             }
         },
-        "related_symptoms" : ["Ho mãn tính","Ho có đờm","Ho ra máu","Ho khan"],
+        "related_symptoms" : ["Ho có đờm","Ho ra máu","Ho khan"],
     },
     "Sốt" : {
         "symptom_period" : {
