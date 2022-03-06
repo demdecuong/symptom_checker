@@ -8,9 +8,9 @@ SYMPTOM_CATEGORY = {
         "symptom_period" : {
             "question" : "Bạn bị bao lâu rồi ?",
             "choices": {
-                "< 1 day" : "Ho nhẹ",
-                "1 tuần" : "Ho thường xuyên",
-                "1 tháng": "Ho kéo dài",
+                "< 1 ngày" : "Ho nhẹ",
+                "1 ngày đến 1 tuần" : "Ho thường xuyên",
+                "1 tuần đến 1 tháng": "Ho kéo dài",
                 "> 1 tháng": "Ho mãn tính"
             }
         },
@@ -21,8 +21,8 @@ SYMPTOM_CATEGORY = {
             "question" : "Bạn bị bao lâu rồi ?" ,
             "choices": {
                 "< 1 day" : "Sốt",
-                "1 tuần" : "Sốt kéo dài",
-                "1 tháng": "Sốt kéo dài",
+                "1 ngày đến 1 tuần" : "Sốt kéo dài",
+                "1 tuần đến 1 tháng": "Sốt kéo dài",
                 "> 1 tháng": "Sốt kéo dài",
             }
         },

@@ -163,7 +163,7 @@ class Application:
                 self.update_asked_symptom(asked_symptom)
 
         self.update_current_response(symptoms=user_symptoms)
-        print(self.current_response)
+        # print("[SYSTEM]",self.current_response)
 
     def update_current_response(self,symptoms:List=[]) -> None:
         ''' Update self.current_response
