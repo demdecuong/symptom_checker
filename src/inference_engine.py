@@ -1,6 +1,6 @@
 ''' 
 Author: Nguyen Phuc Minh
-Lastest update: 1/3/2022
+Lastest update: 8/3/2022
 '''
 
 from src.knowledge_base import KnowledgeBase
@@ -8,7 +8,9 @@ from src.nlp import NLP
 from typing import List, Dict
 from itertools import islice
 from src.constants.config import (
-    MAXIMUM_POSSIBLE_DISEASE
+    MAXIMUM_POSSIBLE_DISEASE,
+    DISEASE_SEVERITY_CONFIDENCE,
+    DISEASE_DEFAULT_CONFIDENCE
 )
 from src.constants.conditions import (
     APPLICATION_MODE
@@ -18,14 +20,24 @@ from data.symptom_category import SYMPTOM_CATEGORY
 class InferenceEngine:
     ''' A wrapper class handle KnowledgeBase and InferenceEngine
     '''
-    def __init__(self,init_weight_method:str='random',do_filter:bool=True, topk:int=30) -> None:
+    def __init__(self,
+                init_weight_method:str='default',
+                do_filter_symptom:bool=False, 
+                do_filter_disease:bool=True, 
+                topk_disease:int=60,
+                topk_symptom:int=30) -> None:
+
         self.knowledge_base = KnowledgeBase(
             init_weight_method=init_weight_method,
-            do_filter=do_filter,
-            topk=topk
+            do_filter_symptom=do_filter_symptom,
+            do_filter_disease=do_filter_disease,
+            topk_symptom=topk_symptom,
+            topk_disease=topk_disease
         )
 
         self.nlp = NLP()
+
+        self.init_weight_method = init_weight_method
 
     def get_relevant_symptoms(self,given_symptom:str,method:str,threshold:float) -> List:
         ''' Get relevant symptoms from database
@@ -40,10 +52,11 @@ class InferenceEngine:
             symptoms = self.knowledge_base.symptoms['name'].tolist()
 
         for s in symptoms:
-            compare_output = self.nlp.compare_string(str1=given_symptom,
-            str2=s,
-            method=method,
-            threshold=threshold)
+            compare_output = self.nlp.compare_string(
+                str1=given_symptom,
+                str2=s,
+                method=method,
+                threshold=threshold)
 
             if compare_output.result or self.nlp.is_included(s,given_symptom):
                 relevant_symptoms.append(s)
@@ -69,9 +82,9 @@ class InferenceEngine:
             for s in symptoms:
                 if s['name'] not in current_response['asked_symptom']:
                     if s['name'] not in list(relevant_symptoms.keys()):
-                        relevant_symptoms[s['name']] = s['severity']
+                        relevant_symptoms[s['name']] = s['confidence']
                     else:
-                        relevant_symptoms[s['name']] += s['severity']
+                        relevant_symptoms[s['name']] += s['confidence']
 
         # re-ranking symptom
         N = 3
@@ -97,14 +110,17 @@ class InferenceEngine:
         result = {}
 
         # get all relevant disease
-        for s in symptoms:
-            relevant_disease = self.knowledge_base.get_common_disease(symptoms)
-            for d,conf in relevant_disease.items():
-                if d not in list(result.keys()):
-                    result[d] = conf
-                else:        
-                    result[d] += conf
- 
+        relevant_disease = self.knowledge_base.get_common_disease(symptoms)
+        for d,conf in relevant_disease.items():
+            if d not in list(result.keys()):
+                result[d] = conf
+            else:        
+                result[d] += conf
+
+        if self.init_weight_method == 'default':
+            # scale confidence score
+            result = {k:v/len(self.knowledge_base.get_symptoms_from_disease(k)) for k,v in result.items()}     
+        
         # sorted 
         N = 5
         top_diseases = {k: v for k, v in sorted(result.items(), reverse=True, key=lambda item: item[1])[:N]}
@@ -126,3 +142,9 @@ class InferenceEngine:
     
     def get_symptom_category(self,symptom) -> dict:
         return SYMPTOM_CATEGORY[symptom]
+
+    def get_disease_end_confidence(self):
+        if self.init_weight_method == 'random':
+            return DISEASE_SEVERITY_CONFIDENCE
+        if self.init_weight_method == 'default':
+            return DISEASE_DEFAULT_CONFIDENCE

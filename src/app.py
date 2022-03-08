@@ -1,6 +1,6 @@
 ''' 
 Author: Nguyen Phuc Minh
-Lastest update: 1/3/2022
+Lastest update: 8/3/2022
 '''
 
 from src.inference_engine import InferenceEngine
@@ -19,8 +19,20 @@ from src.constants.conditions import (
 )
 
 class Application:
-    def __init__(self):
-        self.service = InferenceEngine()
+    def __init__(self,
+                init_weight_method:str,
+                do_filter_symptom=False,
+                do_filter_disease=True,
+                topk_symptom:int=30,
+                topk_disease:int=60) -> None:
+                    
+        self.service = InferenceEngine(
+            init_weight_method=init_weight_method,
+            do_filter_symptom=do_filter_symptom,
+            do_filter_disease=do_filter_disease,
+            topk_symptom=topk_symptom,
+            topk_disease=topk_disease
+        )
 
         self.current_response = {
             "symptom" : [],
@@ -45,6 +57,10 @@ class Application:
         if COMPARE_METHOD == 'edit':
             self.THRESHOLD = EDIT_THRESHOLD
 
+        # end condition
+        self.DISEASE_CONFIDENCE = self.service.get_disease_end_confidence()
+        self.MAXIMUM_TURN = MAXIMUM_TURN
+        
     def run(self, app_mode='horizontal'):
         assert app_mode in APPLICATION_MODE
 
@@ -150,7 +166,7 @@ class Application:
                 self.update_asked_symptom(asked_symptom)
 
                 if app_mode == 'vertical' and self.service.is_included_symptom_category(asked_symptom):
-                    symptom_category = self.service.get_symptom_category(symptom) # dict
+                    symptom_category = self.service.get_symptom_category(asked_symptom) # dict
                     
                     user_chosen_symptom, asked_symptom = self.asking_vertical_question(symptom_category)
                     
@@ -267,7 +283,7 @@ class Application:
         1. num turn 
         2. disease confidence
         '''
-        if num_turn >= MAXIMUM_TURN or self.current_response['possible_disease'][0]['confidence'] >= DISEASE_CONFIDENCE:
+        if num_turn >= self.MAXIMUM_TURN or self.current_response['possible_disease'][0]['confidence'] >= self.DISEASE_CONFIDENCE:
             return True
         return False
 
