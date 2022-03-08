@@ -9,6 +9,8 @@ This is a rule-based approach for Vietnamese Symptom Checker
 pip install -r requirements.txt
 ```
 #### Example usage
+For more examples, please go to [/examples](examples/)
+
 1. Horizontal-based approach
 ```
 python examples/consultation_horizontal_examples.py
@@ -45,11 +47,8 @@ Hãy đánh giá mức độ sốt của bạn - (0-1):1
 =======================================================================
 Bạn có bị Sốt tăng dần không ? (y/n/idk):n
 Bạn có bị Sốt mạn tính không ? (y/n/idk):n
-{'symptom': ['Sốt'], 'triage': 'Bạn có thể chăm sóc tốt tại nhà', 'possible_disease': [{'name': 'Tắc tuyến lệ', 'confidence': 1}, {'name': 'Sốt rét', 'confidence': 1}, {'name': 'Áp xe não', 'confidence': 1}, {'name': 'Viêm cầu thận', 'confidence': 1}, {'name': 'Áp xe thận', 'confidence': 1}], 'asked_symptom': ['Sốt', 'Sốt tăng dần', 'Sốt mạn tính'], 'asked category': [], 'disease_period': ''}
 Bạn có bị Thị lực nhìn mờ không ? (y/n/idk):y
-{'symptom': ['Sốt', 'Thị lực nhìn mờ'], 'triage': 'Bạn có thể chăm sóc tốt tại nhà', 'possible_disease': [{'name': 'Tắc tuyến lệ', 'confidence': 4}, {'name': 'Áp xe não do amip', 'confidence': 4}, {'name': 'Sốt rét', 'confidence': 2}, {'name': 'Áp xe não', 'confidence': 2}, {'name': 'Viêm cầu thận', 'confidence': 2}], 'asked_symptom': ['Sốt', 'Sốt tăng dần', 'Sốt mạn tính', 'Thị lực nhìn mờ'], 'asked category': [], 'disease_period': ''}
 Bạn có bị Mắt bị đỏ không ? (y/n/idk):y
-{'symptom': ['Sốt', 'Thị lực nhìn mờ', 'Mắt bị đỏ'], 'triage': 'Bạn có thể chăm sóc tốt tại nhà', 'possible_disease': [{'name': 'Tắc tuyến lệ', 'confidence': 9}, {'name': 'Áp xe não do amip', 'confidence': 6}, {'name': 'Sốt rét', 'confidence': 3}, {'name': 'Áp xe não', 'confidence': 3}, {'name': 'Viêm cầu thận', 'confidence': 3}], 'asked_symptom': ['Sốt', 'Sốt tăng dần', 'Sốt mạn tính', 'Thị lực nhìn mờ', 'Mắt bị đỏ'], 'asked category': [], 'disease_period': ''}
 Bạn có bị Sưng mắt không ? (y/n/idk):y
 {'symptom': ['Sốt', 'Thị lực nhìn mờ', 'Mắt bị đỏ', 'Sưng mắt'], 'triage': 'Bạn nên đến phòng khám gần nhất', 'possible_disease': [{'name': 'Tắc tuyến lệ', 'confidence': 16}, {'name': 'Áp xe não do amip', 'confidence': 8}, {'name': 'Sốt rét', 'confidence': 4}, {'name': 'Áp xe não', 'confidence': 4}, {'name': 'Viêm cầu thận', 'confidence': 4}], 'asked_symptom': ['Sốt', 'Sốt tăng dần', 'Sốt mạn tính', 'Thị lực nhìn mờ', 'Mắt bị đỏ', 'Sưng mắt'], 'asked category': [], 'disease_period': ''}
 =================================================================

@@ -5,6 +5,7 @@ data/w2v/*
 analysis/phonlp
 analysis/pretrained_phonlp
 
+ie/.ipynb_checkpoints/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

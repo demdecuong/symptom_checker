@@ -18,7 +18,7 @@ SYMPTOM_CATEGORY = {
     },
     "Sốt" : {
         "symptom_period" : {
-            "question" : "Bạn bị bao lâu rồi ?" ,
+            "question" : "Bạn bị bao lâu rồi ?",
             "choices": {
                 "< 1 day" : "Sốt",
                 "1 tuần" : "Sốt kéo dài",
